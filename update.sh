@@ -119,7 +119,7 @@ switch_to_ramfs() {
     $(umount $RAM_ROOT 2>/dev/null) || true
     mount -t tmpfs tmpfs $RAM_ROOT
     cp $1 $RAM_ROOT/$UBI_FILENAME
-    cp $LUMI_FILENAME $RAM_ROOT/
+    cp /$LUMI_FILENAME $RAM_ROOT/
 
     mkdir -p $RAM_ROOT/etc
     mkdir -p $RAM_ROOT/bin
