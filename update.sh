@@ -1,7 +1,7 @@
 #!/bin/bash
 
-if [ "$#" -ne "3" ]; then 
-    echo "Usage:\t$0 <dtb> <kernel> <rootfs>"
+if [ -z "$1" ]; then
+    echo "UBIFS image is required as an argument"
     exit 1
 fi
 
@@ -10,41 +10,10 @@ if [ ! -f "$1" ]; then
     exit 1
 fi
 
-if [ ! -f "$2" ]; then
-    echo "$2 doesn't exist!"
-    exit 1
-fi
-
-if [ ! -f "$3" ]; then
-    echo "$3 doesn't exist!"
-    exit 1
-fi
-
-DTB_FILE="$1"
-KERNEL_FILE="$2"
-UPDATE_FILE="$3"
-
-if [ ! -s $DTB_FILE ]; then
-    echo "$DTB_FILE is empty! Cannot proceed"
-    exit 1
-fi
-
-if [ ! -s $KERNEL_FILE ]; then
-    echo "$KERNEL_FILE is empty! Cannot proceed"
-    exit 1
-fi
-
-if [ ! -s $UPDATE_FILE ]; then
-    echo "$UPDATE_FILE is empty! Cannot proceed"
-    exit 1
-fi
-
 RAM_ROOT=/mnt/root
 OLD_ROOT=/old-root
-
+UPDATE_FILE="$1"
 UBI_FILENAME=rootfs.ubifs
-LUMI_FILENAME=lumi.tar.gz
-
 
 kill_remaining() { # [ <signal> [ <loop> ] ]
     local loop_limit=10
@@ -119,7 +88,6 @@ switch_to_ramfs() {
     $(umount $RAM_ROOT 2>/dev/null) || true
     mount -t tmpfs tmpfs $RAM_ROOT
     cp $1 $RAM_ROOT/$UBI_FILENAME
-    cp /$LUMI_FILENAME $RAM_ROOT/
 
     mkdir -p $RAM_ROOT/etc
     mkdir -p $RAM_ROOT/bin
@@ -200,15 +168,8 @@ ubirmvol /dev/ubi0 -N rootfs
 ubimkvol /dev/ubi0 -N rootfs -m
 sync
 ubiupdatevol /dev/ubi0_0 -s $rootfs_length $1
-sync
 
-echo "Copying Lumi backup..."
-mkdir /mnt
-mount -t ubifs ubi0:rootfs /mnt
-tar -zxvf $LUMI_FILENAME -C /mnt/etc/
 sync
-umount /mnt
-
 echo 'Flashing complete!'
 
 reboot -f
@@ -223,17 +184,6 @@ killall key_rgb || true
 sleep 1
 echo 0 > /dev/watchdog
 echo -n V > /dev/watchdog
-
-echo "Writing DTB..."
-flash_erase /dev/mtd2 0 0
-nandwrite -p /dev/mtd2 -p $DTB_FILE
-
-echo "Writing Kernel..."
-flash_erase /dev/mtd1 0 0
-nandwrite -p /dev/mtd1 -p $KERNEL_FILE
-
-echo "Backing up Lumi..."
-tar -zcvf /$LUMI_FILENAME /lumi/conf
 
 echo "Sending TERM..."
 kill_remaining TERM

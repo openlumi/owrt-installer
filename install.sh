@@ -1,15 +1,10 @@
 #!/bin/bash
 
-VERSION=snapshot-20201013
-
-SYSUP_URL=https://github.com/openlumi/openwrt/releases/download/$VERSION/openwrt-imx6-lumi-ubifs-sysupgrade-$VERSION.tar
-DTB_URL=https://github.com/openlumi/openwrt/releases/download/$VERSION/openwrt-imx6-imx6ull-xiaomi-lumi-$VERSION.dtb
+SYSUP_URL=https://github.com/devbis/xiaomi-gateway-openwrt/releases/download/0.1.0rc4/openwrt-imx6-lumi-ubifs-sysupgrade-rc4.tar
 UTILS_HOST=raw.githubusercontent.com
-UTILS_URL=/openlumi/owrt-installer/main/curl
-UPDATE_URL=/openlumi/owrt-installer/main/update.sh
+UTILS_URL=/openlumi/owrt-installer/rc4/curl
+UPDATE_URL=/openlumi/owrt-installer/rc4/update.sh
 PKG=/tmp/m.tar
-KERNEL=kernel
-DTB=lumi.dtb
 UBIFS=rootfs.ubifs
 
 w_get() {
@@ -31,14 +26,6 @@ w_get $UTILS_HOST $UTILS_URL $WORKDIR/curl
 chmod +x $WORKDIR/curl
 
 echo
-echo Downloading DTB...
-$WORKDIR/curl -L -o /$DTB DTB_URL
-if [ ! -s /$DTB ]; then
-    echo Download failed, please check available space and try again.
-    exit -1
-fi
-
-echo
 echo Downloading SysUpgrade package...
 $WORKDIR/curl -L -o $PKG $SYSUP_URL
 if ! tar -xvf $PKG -C $WORKDIR; then
@@ -46,7 +33,6 @@ if ! tar -xvf $PKG -C $WORKDIR; then
     exit -1
 fi
 rm $PKG
-cp -v $WORKDIR/sysupgrade-*/kernel /$KERNEL
 cp -v $WORKDIR/sysupgrade-*/root /$UBIFS
 
 echo
@@ -62,4 +48,4 @@ echo You have 15 seconds. Press Ctrl+C to cancel.
 echo =================================================================
 sleep 15
 
-setsid /update.sh /$DTB /$KERNEL /$UBIFS >/dev/ttymxc0 2>&1 < /dev/null &
+setsid /update.sh /$UBIFS >/dev/ttymxc0 2>&1 < /dev/null &
