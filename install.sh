@@ -20,6 +20,19 @@ echo =================================================================
 echo OpenWRT automatic installer
 echo =================================================================
 
+# Sanity checks first
+if [ ! -d "/lumi" ]; then
+    echo
+    echo Only STOCK firmware supported. Please try another upgrade path.
+    exit -1
+fi
+
+if lsmod | grep 8189es >/dev/null; then
+    echo
+    echo WiFi module 8189es is not supported by OpenWRT yet.
+    exit -1
+fi
+
 echo
 echo Updating time...
 ntpdate pool.ntp.org
