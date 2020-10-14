@@ -199,6 +199,7 @@ echo 'Writing rootfs...'
 ubirmvol /dev/ubi0 -N rootfs
 ubimkvol /dev/ubi0 -N rootfs -m
 sync
+
 ubiupdatevol /dev/ubi0_0 -s $rootfs_length $1
 sync
 
@@ -206,6 +207,10 @@ echo "Copying Lumi backup..."
 mkdir /mnt
 mount -t ubifs ubi0:rootfs /mnt
 tar -zxvf $LUMI_FILENAME -C /mnt/etc/
+
+if [ ! -f /mnt/lib/upgrade/keep.d/lumi ]; then
+    echo /etc/lumi > /mnt/lib/upgrade/keep.d/lumi
+fi
 sync
 umount /mnt
 
