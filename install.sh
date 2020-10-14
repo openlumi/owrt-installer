@@ -32,7 +32,7 @@ chmod +x $WORKDIR/curl
 
 echo
 echo Downloading DTB...
-$WORKDIR/curl -L -o /$DTB DTB_URL
+$WORKDIR/curl -L -o /$DTB $DTB_URL
 if [ ! -s /$DTB ]; then
     echo Download failed, please check available space and try again.
     exit -1
