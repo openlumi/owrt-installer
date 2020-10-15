@@ -214,7 +214,7 @@ mount -t ubifs ubi0:rootfs /mnt
 tar -zxvf /tmp/$LUMI_FILENAME -C /mnt/etc/
 
 if [ ! -f /mnt/lib/upgrade/keep.d/lumi ]; then
-    echo /etc/lumi > /mnt/lib/upgrade/keep.d/lumi
+    echo /etc/lumi/ > /mnt/lib/upgrade/keep.d/lumi
 fi
 sync
 umount /mnt
