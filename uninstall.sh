@@ -6,17 +6,17 @@
 
 export SAVE_PARTITIONS=1
 
+if [ "$#" -ne "1" ]; then 
+    echo -e "Usage:\n\t$0 <rootfs_backup.tgz>"
+    exit 1
+fi
+
 if uname -r | grep "^4.1" >/dev/null; then
     # Ok, we can proceed
     echo "Kernel check... OK"
 else
     echo "Restored backup wouldn't boot without stock kernel."
     echo "Remove this check if you really sure of what you are doing!"
-    exit 1
-fi
-
-if [ "$#" -ne "1" ]; then 
-    echo -e "Usage:\n\t$0 <rootfs_backup.tgz>"
     exit 1
 fi
 
