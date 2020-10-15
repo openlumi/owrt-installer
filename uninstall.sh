@@ -6,8 +6,16 @@
 
 export SAVE_PARTITIONS=1
 
-if [ "$#" -ne "3" ]; then 
-    echo -e "Usage:\n\t$0 <dtb> <kernel> <rootfs>"
+if uname -r | grep "^4.1" >/dev/null; then
+    # Ok, we can proceed
+else
+    echo "Restored backup wouldn't boot without stock kernel."
+    echo "Remove this check if you really sure of what you are doing!"
+    exit 1
+fi
+
+if [ "$#" -ne "1" ]; then 
+    echo -e "Usage:\n\t$0 <rootfs_backup.tgz>"
     exit 1
 fi
 
@@ -16,30 +24,8 @@ if [ ! -f "$1" ]; then
     exit 1
 fi
 
-if [ ! -f "$2" ]; then
-    echo "$2 doesn't exist!"
-    exit 1
-fi
-
-if [ ! -f "$3" ]; then
-    echo "$3 doesn't exist!"
-    exit 1
-fi
-
-DTB=$1
-KERNEL=$2
-IMAGE=$3
+IMAGE=$1
 IMAGE="$(readlink -f "$IMAGE")"
-
-if [ ! -s $DTB ]; then
-    echo "$DTB is empty! Cannot proceed"
-    exit 1
-fi
-
-if [ ! -s $KERNEL ]; then
-    echo "$KERNEL is empty! Cannot proceed"
-    exit 1
-fi
 
 if [ ! -s $IMAGE ]; then
     echo "$IMAGE is empty! Cannot proceed"
@@ -76,7 +62,7 @@ ubirmvol /dev/ubi0 -N rootfs
 ubimkvol /dev/ubi0 -N rootfs -m
 mkdir -p /mnt
 mount -t ubifs ubi0:rootfs /mnt
-zcat $IMAGE | tar --numeric-owner -xv -C /mnt/ 
+busybox tar -zxvf $IMAGE -C /mnt/ 
 
 v "Downgrade completed"
 sleep 1
@@ -91,13 +77,13 @@ EOF
     chmod +x /lib/upgrade/do_stage2
 }
 
-v "Writing Kernel..."
-flash_erase /dev/mtd1 0 0
-nandwrite -p /dev/mtd1 -p $KERNEL
-
-v "Writing DTB..."
-flash_erase /dev/mtd2 0 0
-nandwrite -p /dev/mtd2 -p $DTB
+echo
+echo =================================================================
+echo Last chance!!! OpenWRT would be replaced with Stock OS backup. 
+echo Proceed only if you really sure of what you are doing!
+echo You have 15 seconds. Press Ctrl+C to cancel.
+echo =================================================================
+sleep 15
 
 write_stage2
 
