@@ -1,7 +1,7 @@
 #!/bin/bash
 
 if [ "$#" -ne "3" ]; then 
-    echo "Usage:\t$0 <dtb> <kernel> <rootfs>"
+    echo -e "Usage:\n\t$0 <dtb> <kernel> <rootfs>"
     exit 1
 fi
 
@@ -22,7 +22,21 @@ fi
 
 DTB_FILE="$1"
 KERNEL_FILE="$2"
-UPDATE_FILE="$3"
+IMAGE="$3"
+IMAGE="$(readlink -f "$IMAGE")"
+
+case "$IMAGE" in
+    '')
+        echo "Image file not found." >&2
+        exit 1
+        ;;
+    /tmp/*) ;;
+    *)
+        echo "Image not in /tmp, copying..."
+        cp -f "$IMAGE" /tmp/$UBI_FILENAME
+        IMAGE=/tmp/$UBI_FILENAME
+        ;;
+esac
 
 if [ ! -s $DTB_FILE ]; then
     echo "$DTB_FILE is empty! Cannot proceed"
@@ -34,17 +48,11 @@ if [ ! -s $KERNEL_FILE ]; then
     exit 1
 fi
 
-if [ ! -s $UPDATE_FILE ]; then
-    echo "$UPDATE_FILE is empty! Cannot proceed"
-    exit 1
-fi
-
-RAM_ROOT=/mnt/root
+RAM_ROOT=/tmp/root
 OLD_ROOT=/old-root
 
 UBI_FILENAME=rootfs.ubifs
 LUMI_FILENAME=lumi.tar.gz
-
 
 kill_remaining() { # [ <signal> [ <loop> ] ]
     local loop_limit=10
@@ -109,6 +117,7 @@ supivot() { # <new_root> <old_root>
 
     /bin/mount -o noatime,move $2/sys /sys
     /bin/mount -o noatime,move $2/dev /dev
+    /bin/mount -o noatime,move $2/tmp /tmp
 
     return 0
 }
@@ -118,11 +127,10 @@ switch_to_ramfs() {
     mkdir -p $RAM_ROOT
     $(umount $RAM_ROOT 2>/dev/null) || true
     mount -t tmpfs tmpfs $RAM_ROOT
-    cp $1 $RAM_ROOT/$UBI_FILENAME
-    cp /$LUMI_FILENAME $RAM_ROOT/
 
     mkdir -p $RAM_ROOT/etc
     mkdir -p $RAM_ROOT/bin
+    mkdir -p $RAM_ROOT/mnt
     mkdir -p $RAM_ROOT/sbin
     mkdir -p $RAM_ROOT/lib
 
@@ -167,7 +175,6 @@ switch_to_ramfs() {
     umount /proc || true
     umount /run  || true
     umount /var/volatile || true
-    umount /tmp  || true
     sync
 
     supivot $RAM_ROOT $OLD_ROOT || {
@@ -192,7 +199,6 @@ telinit u
 killall getty
 
 echo 'Unmounting old root...'
-#umount -f $OLD_ROOT$RAM_ROOT
 umount -f $OLD_ROOT
 
 echo 'Writing rootfs...'
@@ -204,9 +210,8 @@ ubiupdatevol /dev/ubi0_0 -s $rootfs_length $1
 sync
 
 echo "Copying Lumi backup..."
-mkdir /mnt
 mount -t ubifs ubi0:rootfs /mnt
-tar -zxvf $LUMI_FILENAME -C /mnt/etc/
+tar -zxvf /tmp/$LUMI_FILENAME -C /mnt/etc/
 
 if [ ! -f /mnt/lib/upgrade/keep.d/lumi ]; then
     echo /etc/lumi > /mnt/lib/upgrade/keep.d/lumi
@@ -238,7 +243,7 @@ flash_erase /dev/mtd1 0 0
 nandwrite -p /dev/mtd1 -p $KERNEL_FILE
 
 echo "Backing up Lumi..."
-tar -zcvf /$LUMI_FILENAME /lumi/conf
+tar -zcvf /tmp/$LUMI_FILENAME /lumi/conf
 
 echo "Sending TERM..."
 kill_remaining TERM
@@ -248,5 +253,5 @@ echo "Sending KILL..."
 kill_remaining KILL 1
 sleep 1
 
-switch_to_ramfs $UPDATE_FILE
-write_image $UBI_FILENAME
+switch_to_ramfs
+write_image $IMAGE

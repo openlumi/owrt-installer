@@ -76,7 +76,7 @@ ubirmvol /dev/ubi0 -N rootfs
 ubimkvol /dev/ubi0 -N rootfs -m
 mkdir /mnt
 mount -t ubifs ubi0:rootfs /mnt
-tar -zxvf $IMAGE -C /mnt/ 
+tar --numeric-owner -zxvf $IMAGE -C /mnt/ 
 
 v "Downgrade completed"
 sleep 1

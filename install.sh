@@ -45,8 +45,8 @@ chmod +x $WORKDIR/curl
 
 echo
 echo Downloading DTB...
-$WORKDIR/curl -L -o /$DTB $DTB_URL
-if [ ! -s /$DTB ]; then
+$WORKDIR/curl -L -o $WORKDIR/$DTB $DTB_URL
+if [ ! -s $WORKDIR/$DTB ]; then
     echo Download failed, please check available space and try again.
     exit -1
 fi
@@ -59,14 +59,14 @@ if ! tar -xvf $PKG -C $WORKDIR; then
     exit -1
 fi
 rm $PKG
-cp -v $WORKDIR/sysupgrade-*/kernel /$KERNEL
-cp -v $WORKDIR/sysupgrade-*/root /$UBIFS
+mv $WORKDIR/sysupgrade-*/kernel $WORKDIR/$KERNEL
+mv $WORKDIR/sysupgrade-*/root $WORKDIR/$UBIFS
+rm -rf $WORKDIR/sysupgrade-*
 
 echo
 echo Downloading upgrade script...
-$WORKDIR/curl -L -o /update.sh https://$UTILS_HOST$UPDATE_URL
-chmod +x /update.sh
-rm -rf $WORKDIR
+$WORKDIR/curl -L -o $WORKDIR/update.sh https://$UTILS_HOST$UPDATE_URL
+chmod +x $WORKDIR/update.sh
 
 echo
 echo =================================================================
@@ -75,4 +75,4 @@ echo You have 15 seconds. Press Ctrl+C to cancel.
 echo =================================================================
 sleep 15
 
-setsid /update.sh /$DTB /$KERNEL /$UBIFS >/dev/ttymxc0 2>&1 < /dev/null &
+setsid $WORKDIR/update.sh $WORKDIR/$DTB $WORKDIR/$KERNEL $WORKDIR/$UBIFS >/dev/ttymxc0 2>&1 < /dev/null &
