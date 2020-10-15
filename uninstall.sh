@@ -7,7 +7,7 @@
 export SAVE_PARTITIONS=1
 
 if [ "$#" -ne "3" ]; then 
-    echo "Usage:\t$0 <dtb> <kernel> <rootfs>"
+    echo -e "Usage:\n\t$0 <dtb> <kernel> <rootfs>"
     exit 1
 fi
 
@@ -74,9 +74,9 @@ include /lib/upgrade
 v "Performing system downgrade..."
 ubirmvol /dev/ubi0 -N rootfs
 ubimkvol /dev/ubi0 -N rootfs -m
-mkdir /mnt
+mkdir -p /mnt
 mount -t ubifs ubi0:rootfs /mnt
-tar --numeric-owner -zxvf $IMAGE -C /mnt/ 
+zcat $IMAGE | tar --numeric-owner -xv -C /mnt/ 
 
 v "Downgrade completed"
 sleep 1
