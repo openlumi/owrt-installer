@@ -6,7 +6,7 @@ Every unit has it's own unique token. It can't be regenerated. You won't be able
 After gaining root access create a full rootfs backup with the following command:
 
 ```
-tar -cvpzf /tmp/lumi_stock.tar.gz -C / --exclude='./tmp/*' --exclude='./proc/*' --exclude='./sys/*' .
+tar -cvpzf /tmp/lumi_stock.tar.gz -C / --exclude='./tmp/*' --exclude='./dev/*' --exclude='./run/*' --exclude='./proc/*' --exclude='./sys/*' .
 ```
 And copy the resulted `/tmp/lumi_stock.tar.gz` to your PC!
 
@@ -28,7 +28,7 @@ echo -e "GET /openlumi/owrt-installer/main/install.sh HTTP/1.0\nHost: raw.github
 После получения root, сделайте полный бэкап rootfs следующей командой:
 
 ```
-tar -cvpzf /tmp/lumi_stock.tar.gz -C / --exclude='./tmp/*' --exclude='./proc/*' --exclude='./sys/*' .
+tar -cvpzf /tmp/lumi_stock.tar.gz -C / --exclude='./tmp/*' --exclude='./dev/*' --exclude='./run/*' --exclude='./proc/*' --exclude='./sys/*' .
 ```
 И скопируйте полученный файл `/tmp/lumi_stock.tar.gz` на свой компьютер!
 
