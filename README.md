@@ -23,12 +23,12 @@ echo -e "GET /openlumi/owrt-installer/main/install.sh HTTP/1.0\nHost: raw.github
 1. Log into box as root.
 2. Download and extract stock kernel. You might use your own.
 ```
-wget -o /root/stock.tar.gz https://github.com/openlumi/owrt-installer/releases/download/stock/stock_kernel.tar.gz
+wget -O /root/stock.tar.gz https://github.com/openlumi/owrt-installer/releases/download/stock/stock_kernel.tar.gz
 tar -C / -zxvf /root/stock.tar.gz
 ```
 3. Download uninstall script.
 ```
-wget -o /root/uninstall.sh https://raw.githubusercontent.com/openlumi/owrt-installer/main/uninstall.sh
+wget -O /root/uninstall.sh https://raw.githubusercontent.com/openlumi/owrt-installer/main/uninstall.sh
 chmod +x /root/uninstall.sh
 ```
 4. Upload your `lumi_stock.tar.gz` from your PC to `/root/` folder of your box. Make sure you have enough space for it.
@@ -75,12 +75,12 @@ echo -e "GET /openlumi/owrt-installer/main/install.sh HTTP/1.0\nHost: raw.github
 1. Зайдите на устройство с правами root.
 2. Скачайте и распакуйте стоковое ядро. Может использовать свою копию, если сделали бэкап.
 ```
-wget -o /root/stock.tar.gz https://github.com/openlumi/owrt-installer/releases/download/stock/stock_kernel.tar.gz
+wget -O /root/stock.tar.gz https://github.com/openlumi/owrt-installer/releases/download/stock/stock_kernel.tar.gz
 tar -C / -zxvf /root/stock.tar.gz
 ```
 3. Скачайте скрипт uninstall
 ```
-wget -o /root/uninstall.sh https://raw.githubusercontent.com/openlumi/owrt-installer/main/uninstall.sh
+wget -O /root/uninstall.sh https://raw.githubusercontent.com/openlumi/owrt-installer/main/uninstall.sh
 chmod +x /root/uninstall.sh
 ```
 4. Загрузите ваш бэкап `lumi_stock.tar.gz` с вашего компьютера в папку  `/root/` на вашем устройстве. Предварительно убедитесь что места достаточно.
