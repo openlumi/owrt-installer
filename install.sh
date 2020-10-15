@@ -2,8 +2,8 @@
 
 VERSION=snapshot-20201014
 
-SYSUP_URL=https://github.com/openlumi/openwrt/releases/download/$VERSION/openwrt-imx6-lumi-ubifs-sysupgrade-$VERSION.tar
-DTB_URL=https://github.com/openlumi/openwrt/releases/download/$VERSION/openwrt-imx6-imx6ull-xiaomi-lumi-$VERSION.dtb
+SYSUP_URL=https://github.com/openlumi/openwrt/releases/download/$VERSION/openwrt-imx6-lumi-ubifs-sysupgrade.tar
+DTB_URL=https://github.com/openlumi/openwrt/releases/download/$VERSION/openwrt-imx6-imx6ull-xiaomi-lumi.dtb
 UTILS_HOST=raw.githubusercontent.com
 UTILS_URL=/openlumi/owrt-installer/main/curl
 UPDATE_URL=/openlumi/owrt-installer/main/update.sh
