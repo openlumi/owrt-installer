@@ -8,6 +8,7 @@ export SAVE_PARTITIONS=1
 
 if uname -r | grep "^4.1" >/dev/null; then
     # Ok, we can proceed
+    echo "Kernel check... OK"
 else
     echo "Restored backup wouldn't boot without stock kernel."
     echo "Remove this check if you really sure of what you are doing!"
