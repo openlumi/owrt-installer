@@ -19,6 +19,36 @@ And copy the resulted `/tmp/lumi_stock.tar.gz` to your PC!
 echo -e "GET /openlumi/owrt-installer/main/install.sh HTTP/1.0\nHost: raw.githubusercontent.com\n" | openssl s_client -quiet -connect raw.githubusercontent.com:443 2>/dev/null | sed '1,/^\r$/d' | bash
 ```
 
+## Steps to revert to stock
+1. Log into box as root.
+2. Download and extract stock kernel. You might use your own.
+```
+wget -o /root/stock.tar.gz https://github.com/openlumi/owrt-installer/releases/download/stock/stock_kernel.tar.gz
+tar -C / -zxvf /root/stock.tar.gz
+```
+3. Download uninstall script.
+```
+wget -o /root/uninstall.sh https://raw.githubusercontent.com/openlumi/owrt-installer/main/uninstall.sh
+chmod +x /root/uninstall.sh
+```
+4. Upload your `lumi_stock.tar.gz` from your PC to `/root/` folder of your box. Make sure you have enough space for it.
+5. Downgrade kernel.
+```
+/root/flash_kernel.sh /root/stock-lumi.dtb /root/stock-zImage
+```
+6. Reset your WiFi settings, they would probably be obsolete after kernel downgrading.
+```
+rm /etc/config/wireless
+```
+7. **REBOOT**
+8. Log into your box using it's AP or within UART.
+9. Make sure you have all needed files (`/root/uninstall.sh` and `/root/lumi_stock.tar.gz`) in place.
+10. Run uninstall script.
+```
+/root/uninstall.sh /root/lumi_stock.tar.gz
+```
+After reboot you should have a stock OS running. If you got a brick, use mfgtools method.
+
 ---
 # owrt-installer
 Коллекция скриптов для автоматической установки OpenWRT на хаб Xiaomi DGNWG05LM (ZHWG11LM).
@@ -40,3 +70,33 @@ tar -cvpzf /tmp/lumi_stock.tar.gz -C / --exclude='./tmp/*' --exclude='./dev/*' -
 ```
 echo -e "GET /openlumi/owrt-installer/main/install.sh HTTP/1.0\nHost: raw.githubusercontent.com\n" | openssl s_client -quiet -connect raw.githubusercontent.com:443 2>/dev/null | sed '1,/^\r$/d' | bash
 ```
+
+## Откат на стоковую прошивку
+1. Зайдите на устройство с правами root.
+2. Скачайте и распакуйте стоковое ядро. Может использовать свою копию, если сделали бэкап.
+```
+wget -o /root/stock.tar.gz https://github.com/openlumi/owrt-installer/releases/download/stock/stock_kernel.tar.gz
+tar -C / -zxvf /root/stock.tar.gz
+```
+3. Скачайте скрипт uninstall
+```
+wget -o /root/uninstall.sh https://raw.githubusercontent.com/openlumi/owrt-installer/main/uninstall.sh
+chmod +x /root/uninstall.sh
+```
+4. Загрузите ваш бэкап `lumi_stock.tar.gz` с вашего компьютера в папку  `/root/` на вашем устройстве. Предварительно убедитесь что места достаточно.
+5. Даунгрейдните ядро до стокового.
+```
+/root/flash_kernel.sh /root/stock-lumi.dtb /root/stock-zImage
+```
+6. Сбросьте ваши настройки WiFi, вероятнее всего со стоковым ядром они будут бесполезны.
+```
+rm /etc/config/wireless
+```
+7. **ПЕРЕЗАГРУЗИТЕ ХАБ**
+8. Подключитесь к хабу через точку доступа или с помощью UART.
+9. Убедитесь что все нужные файлы (`/root/uninstall.sh` и `/root/lumi_stock.tar.gz`) на месте и правильных размеров.
+10. Запустите скрипт uninstall.
+```
+/root/uninstall.sh /root/lumi_stock.tar.gz
+```
+После перезагрузки вы получите стоковую прошивку на момент бэкапа. Если на выходе получился кирпич, попробуйте прошивку с помощью mfgtools.
