@@ -66,6 +66,10 @@ rm -rf $WORKDIR/sysupgrade-*
 echo
 echo Downloading upgrade script...
 $WORKDIR/curl -L -o $WORKDIR/update.sh https://$UTILS_HOST$UPDATE_URL
+if [ ! -s $WORKDIR/update.sh ]; then
+    echo Download failed, please check available space and try again.
+    exit -1
+fi
 chmod +x $WORKDIR/update.sh
 
 echo
