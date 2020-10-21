@@ -1,6 +1,6 @@
 #!/bin/bash
 
-VERSION=snapshot-20201014
+VERSION=${VERSION:-snapshot-20201014}
 
 SYSUP_URL=https://github.com/openlumi/openwrt/releases/download/$VERSION/openwrt-imx6-lumi-ubifs-sysupgrade.tar
 DTB_URL=https://github.com/openlumi/openwrt/releases/download/$VERSION/openwrt-imx6-imx6ull-xiaomi-lumi.dtb
