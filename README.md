@@ -72,7 +72,7 @@ tar -cvpzf /tmp/lumi_stock.tar.gz -C / --exclude='./tmp/*' --exclude='./dev/*' -
 ```
 echo -e "GET /openlumi/owrt-installer/main/install.sh HTTP/1.0\nHost: raw.githubusercontent.com\n" | openssl s_client -quiet -connect raw.githubusercontent.com:443 2>/dev/null | sed '1,/^\r$/d' | bash
 ```
-5. После установки ободок погаснет. Но при этом устройсво не выклюено!
+5. После установки ободок погаснет. Но при этом устройство не выключено!
 6. Чтобы подключиться к устройству удерживайте кнопку 10 секунд. Ободок начнёт моргать жёлтым и устройство поднимет сеть `OpenWrt`. Веб интерфейс будет доступен по адресу [http://192.168.1.1](http://192.168.1.1).
 
 ## Откат на стоковую прошивку
