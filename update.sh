@@ -33,8 +33,8 @@ case "$IMAGE" in
     /tmp/*) ;;
     *)
         echo "Image not in /tmp, copying..."
-        cp -f "$IMAGE" /tmp/$UBI_FILENAME
-        IMAGE=/tmp/$UBI_FILENAME
+        cp -f "$IMAGE" /tmp/$ROOTFS_FILENAME
+        IMAGE=/tmp/$ROOTFS_FILENAME
         ;;
 esac
 
@@ -51,7 +51,7 @@ fi
 RAM_ROOT=/tmp/root
 OLD_ROOT=/old-root
 
-UBI_FILENAME=rootfs.ubifs
+ROOTFS_FILENAME=rootfs.squashfs
 LUMI_FILENAME=lumi.tar.gz
 
 kill_remaining() { # [ <signal> [ <loop> ] ]
@@ -203,18 +203,20 @@ umount -f $OLD_ROOT
 
 echo 'Writing rootfs...'
 ubirmvol /dev/ubi0 -N rootfs
-ubimkvol /dev/ubi0 -N rootfs -m
+ubimkvol /dev/ubi0 -Nrootfs -s $rootfs_length
+ubimkvol /dev/ubi0 -Nrootfs_data -m
 sync
 
-ubiupdatevol /dev/ubi0_0 -s $rootfs_length $1
+ubiupdatevol /dev/ubi0_0 $1
 sync
 
 echo "Copying Lumi backup..."
-mount -t ubifs ubi0:rootfs /mnt
-tar -zxvf /tmp/$LUMI_FILENAME -C /mnt/etc/
+mount -t ubifs ubi0:rootfs_data /mnt
+mkdir -p /mnt/upper/etc/
+tar -zxvf /tmp/$LUMI_FILENAME -C /mnt/upper/etc/
 
-if [ ! -f /mnt/lib/upgrade/keep.d/lumi ]; then
-    echo /etc/lumi/ > /mnt/lib/upgrade/keep.d/lumi
+if [ ! -f /mnt/upper/lib/upgrade/keep.d/lumi ]; then
+    echo /etc/lumi/ > /mnt/upper/lib/upgrade/keep.d/lumi
 fi
 sync
 umount /mnt
