@@ -1,6 +1,6 @@
 #!/bin/bash
 
-VERSION=${VERSION:-v19.07.5-20201215}
+VERSION=${VERSION:-v19.07.5-20201217}
 
 SYSUP_URL=https://github.com/openlumi/openwrt/releases/download/$VERSION/openwrt-imx6-lumi-squashfs-sysupgrade.bin
 DTB_URL=https://github.com/openlumi/openwrt/releases/download/$VERSION/openwrt-imx6-imx6ull-xiaomi-lumi.dtb
