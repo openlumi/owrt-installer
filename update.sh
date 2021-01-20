@@ -52,7 +52,7 @@ RAM_ROOT=/tmp/root
 OLD_ROOT=/old-root
 
 ROOTFS_FILENAME=rootfs.squashfs
-LUMI_FILENAME=lumi.tar.gz
+LUMI_FILENAME=sysupgrade.tgz
 
 kill_remaining() { # [ <signal> [ <loop> ] ]
     local loop_limit=10
@@ -212,12 +212,8 @@ sync
 
 echo "Copying Lumi backup..."
 mount -t ubifs ubi0:rootfs_data /mnt
-mkdir -p /mnt/upper/etc/
-tar -zxvf /tmp/$LUMI_FILENAME -C /mnt/upper/etc/
+cp /tmp/$LUMI_FILENAME /mnt/
 
-if [ ! -f /mnt/upper/lib/upgrade/keep.d/lumi ]; then
-    echo /etc/lumi/ > /mnt/upper/lib/upgrade/keep.d/lumi
-fi
 sync
 umount /mnt
 
@@ -245,7 +241,11 @@ flash_erase /dev/mtd1 0 0
 nandwrite -p /dev/mtd1 -p $KERNEL_FILE
 
 echo "Backing up Lumi..."
-tar -zcvf /tmp/$LUMI_FILENAME /lumi/conf
+mkdir -p /tmp/lumibackup/etc/lumi/
+mkdir -p /tmp/lumibackup/lib/upgrade/keep.d/
+echo /etc/lumi/ > /tmp/lumibackup/lib/upgrade/keep.d/lumi
+cp -aPrv /lumi/conf /tmp/lumibackup/etc/lumi/
+tar -C /tmp/lumibackup -zcvf /tmp/$LUMI_FILENAME .
 
 echo "Sending TERM..."
 kill_remaining TERM
