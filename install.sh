@@ -45,7 +45,7 @@ chmod +x $WORKDIR/curl
 
 echo
 echo Downloading DTB...
-$WORKDIR/curl -L -o $WORKDIR/$DTB $DTB_URL
+$WORKDIR/curl --insecure -L -o $WORKDIR/$DTB $DTB_URL
 if [ ! -s $WORKDIR/$DTB ]; then
     echo Download failed, please check available space and try again.
     exit -1
@@ -53,7 +53,7 @@ fi
 
 echo
 echo Downloading SysUpgrade package...
-$WORKDIR/curl -L -o $PKG $SYSUP_URL
+$WORKDIR/curl --insecure -L -o $PKG $SYSUP_URL
 if ! tar -xvf $PKG -C $WORKDIR; then
     echo Unpacking failed, please check available space and try again.
     exit -1
@@ -65,7 +65,7 @@ rm -rf $WORKDIR/sysupgrade-*
 
 echo
 echo Downloading upgrade script...
-$WORKDIR/curl -L -o $WORKDIR/update.sh https://$UTILS_HOST$UPDATE_URL
+$WORKDIR/curl --insecure -L -o $WORKDIR/update.sh https://$UTILS_HOST$UPDATE_URL
 if [ ! -s $WORKDIR/update.sh ]; then
     echo Download failed, please check available space and try again.
     exit -1
