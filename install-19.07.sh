@@ -1,15 +1,15 @@
 #!/bin/bash
 
-VERSION=${VERSION:-21.02.0}
+VERSION=${VERSION:-v19.07.7-20210224}
 
-RELEASES_URL=https://openlumi.github.io/releases/
+SYSUP_URL=https://github.com/openlumi/openwrt/releases/download/$VERSION/openwrt-imx6-lumi-squashfs-sysupgrade.bin
+DTB_URL=https://github.com/openlumi/openwrt/releases/download/$VERSION/openwrt-imx6-imx6ull-xiaomi-lumi.dtb
 UTILS_HOST=raw.githubusercontent.com
 UTILS_URL=/openlumi/owrt-installer/main/curl
 UPDATE_URL=/openlumi/owrt-installer/main/update.sh
 PKG=/tmp/m.tar
 KERNEL=kernel
 DTB=lumi.dtb
-UBOOT=u-boot.imx
 SQUASHFS=rootfs.squashfs
 
 w_get() {
@@ -27,19 +27,11 @@ if [ ! -d "/lumi" ]; then
     exit -1
 fi
 
-if lsmod | grep 8189es >/dev/null; then
-    SYSUP_URL=${RELEASES_URL}${VERSION}--zhwg11lm/targets/imx6/generic/openlumi-${VERSION}-imx6-aqara_zhwg11lm-squashfs-sysupgrade.bin
-    DTB_URL=${RELEASES_URL}${VERSION}--zhwg11lm/targets/imx6/generic/openlumi-${VERSION}-imx6-imx6ull-aqara-zhwg11lm.dtb
-    UBOOT_URL=${RELEASES_URL}${VERSION}--zhwg11lm/targets/imx6/generic/u-boot-xiaomi_dgnwg05lm/u-boot.imx
-elif lsmod | grep 8723bs >/dev/null; then
-    SYSUP_URL=${RELEASES_URL}${VERSION}--dgnwg05lm/targets/imx6/generic/openlumi-${VERSION}-imx6-xiaomi_dgnwg05lm-squashfs-sysupgrade.bin
-    DTB_URL=${RELEASES_URL}${VERSION}--dgnwg05lm/targets/imx6/generic/openlumi-${VERSION}-imx6-imx6ull-xiaomi-dgnwg05lm.dtb
-    UBOOT_URL=${RELEASES_URL}${VERSION}--dgnwg05lm/targets/imx6/generic/u-boot-xiaomi_dgnwg05lm/u-boot.imx
-else
-    echo
-    echo This gateway is not supported by OpenWRT yet.
-    exit -1
-fi
+#if lsmod | grep 8189es >/dev/null; then
+#    echo
+#    echo WiFi module 8189es is not supported by OpenWRT yet.
+#    exit -1
+#fi
 
 echo
 echo Updating time...
@@ -50,14 +42,6 @@ echo Downloading curl...
 WORKDIR=$(mktemp -d)
 w_get $UTILS_HOST $UTILS_URL $WORKDIR/curl
 chmod +x $WORKDIR/curl
-
-echo
-echo Downloading U-Boot...
-$WORKDIR/curl --insecure -L -o $WORKDIR/$UBOOT $UBOOT_URL
-if [ ! -s $WORKDIR/$UBOOT ]; then
-    echo Download failed, please check available space and try again.
-    exit -1
-fi
 
 echo
 echo Downloading DTB...
@@ -90,10 +74,9 @@ chmod +x $WORKDIR/update.sh
 
 echo
 echo =================================================================
-echo Last chance!!! Stock OS would be replaced with OpenWRT.
+echo Last chance!!! Stock OS would be replaced with OpenWRT. 
 echo You have 15 seconds. Press Ctrl+C to cancel.
 echo =================================================================
 sleep 15
 
-kobs-ng init -x -v --chip_0_device_path=/dev/mtd0 $WORKDIR/$UBOOT
 setsid $WORKDIR/update.sh $WORKDIR/$DTB $WORKDIR/$KERNEL $WORKDIR/$SQUASHFS >/dev/ttymxc0 2>&1 < /dev/null &
