@@ -98,7 +98,7 @@ header() {
 }
 
 openwrt_main_menu() {
-  stock_install_menu
+  #stock_install_menu
 }
 
 stock_main_menu() {
