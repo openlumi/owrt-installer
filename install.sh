@@ -1,6 +1,6 @@
 #!/bin/bash
 
-VERSION=${VERSION:-21.02.1}
+VERSION=${VERSION:-21.02.2}
 
 RELEASES_URL=https://openlumi.github.io/releases/
 UTILS_HOST=raw.githubusercontent.com
@@ -28,13 +28,13 @@ if [ ! -d "/lumi" ]; then
 fi
 
 if lsmod | grep 8189es >/dev/null; then
-    SYSUP_URL=${RELEASES_URL}${VERSION}--zhwg11lm/targets/imx6/generic/openlumi-${VERSION}-imx6-aqara_zhwg11lm-squashfs-sysupgrade.bin
-    DTB_URL=${RELEASES_URL}${VERSION}--zhwg11lm/targets/imx6/generic/openlumi-${VERSION}-imx6-imx6ull-aqara-zhwg11lm.dtb
-    UBOOT_URL=${RELEASES_URL}${VERSION}--zhwg11lm/targets/imx6/generic/u-boot-xiaomi_dgnwg05lm/u-boot.imx
+    SYSUP_URL=${RELEASES_URL}${VERSION}/targets/imx6/generic/openlumi-${VERSION}-imx6-aqara_zhwg11lm-squashfs-sysupgrade.bin
+    DTB_URL=${RELEASES_URL}${VERSION}/targets/imx6/generic/openlumi-${VERSION}-imx6-imx6ull-aqara-zhwg11lm.dtb
+    UBOOT_URL=${RELEASES_URL}${VERSION}/targets/imx6/generic/u-boot-xiaomi_dgnwg05lm/u-boot.imx
 elif lsmod | grep 8723bs >/dev/null; then
-    SYSUP_URL=${RELEASES_URL}${VERSION}--dgnwg05lm/targets/imx6/generic/openlumi-${VERSION}-imx6-xiaomi_dgnwg05lm-squashfs-sysupgrade.bin
-    DTB_URL=${RELEASES_URL}${VERSION}--dgnwg05lm/targets/imx6/generic/openlumi-${VERSION}-imx6-imx6ull-xiaomi-dgnwg05lm.dtb
-    UBOOT_URL=${RELEASES_URL}${VERSION}--dgnwg05lm/targets/imx6/generic/u-boot-xiaomi_dgnwg05lm/u-boot.imx
+    SYSUP_URL=${RELEASES_URL}${VERSION}/targets/imx6/generic/openlumi-${VERSION}-imx6-xiaomi_dgnwg05lm-squashfs-sysupgrade.bin
+    DTB_URL=${RELEASES_URL}${VERSION}/targets/imx6/generic/openlumi-${VERSION}-imx6-imx6ull-xiaomi-dgnwg05lm.dtb
+    UBOOT_URL=${RELEASES_URL}${VERSION}/targets/imx6/generic/u-boot-xiaomi_dgnwg05lm/u-boot.imx
 else
     echo
     echo This gateway is not supported by OpenWRT yet.
