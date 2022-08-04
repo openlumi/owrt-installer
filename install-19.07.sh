@@ -1,9 +1,9 @@
 #!/bin/bash
 
-VERSION=${VERSION:-v19.07.7-20210224}
+VERSION=${VERSION:-19.07.10}
 
-SYSUP_URL=https://github.com/openlumi/openwrt/releases/download/$VERSION/openwrt-imx6-lumi-squashfs-sysupgrade.bin
-DTB_URL=https://github.com/openlumi/openwrt/releases/download/$VERSION/openwrt-imx6-imx6ull-xiaomi-lumi.dtb
+SYSUP_URL=https://openlumi.github.io/releases/${VERSION}/targets/imx6/generic/openlumi-${VERSION}-imx6-lumi-squashfs-sysupgrade.bin
+DTB_URL=ttps://openlumi.github.io/releases/${VERSION}/targets/imx6/generic/openlumi-${VERSION}-imx6-imx6ull-xiaomi-lumi.dtb
 UTILS_HOST=raw.githubusercontent.com
 UTILS_URL=/openlumi/owrt-installer/main/curl
 UPDATE_URL=/openlumi/owrt-installer/main/update.sh
