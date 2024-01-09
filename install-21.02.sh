@@ -1,6 +1,6 @@
 #!/bin/bash
 
-VERSION=${VERSION:-23.05.2}
+VERSION=${VERSION:-21.02.6}
 
 RELEASES_URL=https://openlumi.github.io/releases/
 UTILS_HOST=raw.githubusercontent.com
@@ -28,17 +28,18 @@ if [ ! -d "/lumi" ]; then
 fi
 
 if lsmod | grep 8189es >/dev/null; then
-    SYSUP_URL=${RELEASES_URL}${VERSION}/targets/imx/cortexa7/openlumi-${VERSION}-imx-cortexa7-aqara_zhwg11lm-squashfs-sysupgrade.bin
-    DTB_URL=${RELEASES_URL}${VERSION}/targets/imx/cortexa7/openlumi-${VERSION}-imx-cortexa7-imx6ull-aqara-zhwg11lm.dtb
+    SYSUP_URL=${RELEASES_URL}${VERSION}/targets/imx6/generic/openlumi-${VERSION}-imx6-aqara_zhwg11lm-squashfs-sysupgrade.bin
+    DTB_URL=${RELEASES_URL}${VERSION}/targets/imx6/generic/openlumi-${VERSION}-imx6-imx6ull-aqara-zhwg11lm.dtb
+    UBOOT_URL=${RELEASES_URL}${VERSION}/targets/imx6/generic/u-boot-xiaomi_dgnwg05lm/u-boot.imx
 elif lsmod | grep 8723bs >/dev/null; then
-    SYSUP_URL=${RELEASES_URL}${VERSION}/targets/imx/cortexa7/openlumi-${VERSION}-imx-cortexa7-xiaomi_dgnwg05lm-squashfs-sysupgrade.bin
-    DTB_URL=${RELEASES_URL}${VERSION}/targets/imx/cortexa7/openlumi-${VERSION}-imx-cortexa7-imx6ull-xiaomi-dgnwg05lm.dtb
+    SYSUP_URL=${RELEASES_URL}${VERSION}/targets/imx6/generic/openlumi-${VERSION}-imx6-xiaomi_dgnwg05lm-squashfs-sysupgrade.bin
+    DTB_URL=${RELEASES_URL}${VERSION}/targets/imx6/generic/openlumi-${VERSION}-imx6-imx6ull-xiaomi-dgnwg05lm.dtb
+    UBOOT_URL=${RELEASES_URL}${VERSION}/targets/imx6/generic/u-boot-xiaomi_dgnwg05lm/u-boot.imx
 else
     echo
     echo This gateway is not supported by OpenWRT yet.
     exit -1
 fi
-UBOOT_URL=${RELEASES_URL}${VERSION}/targets/imx/cortexa7/u-boot-xiaomi_dgnwg05lm/u-boot.imx
 
 echo
 echo Updating time...
