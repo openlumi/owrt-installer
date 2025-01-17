@@ -1,6 +1,6 @@
 #!/bin/bash
 
-VERSION=${VERSION:-23.05.4}
+VERSION=${VERSION:-23.05.5}
 
 RELEASES_URL=https://openlumi.github.io/releases/
 UTILS_HOST=raw.githubusercontent.com
