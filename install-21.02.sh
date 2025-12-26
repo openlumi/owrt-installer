@@ -2,7 +2,7 @@
 
 VERSION=${VERSION:-21.02.6}
 
-RELEASES_URL=https://openlumi.github.io/releases/
+RELEASES_URL=https://openlumi.github.io/archive/
 UTILS_HOST=raw.githubusercontent.com
 UTILS_URL=/openlumi/owrt-installer/main/curl
 UPDATE_URL=/openlumi/owrt-installer/main/update.sh
