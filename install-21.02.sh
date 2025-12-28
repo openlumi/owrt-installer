@@ -53,7 +53,7 @@ chmod +x $WORKDIR/curl
 
 echo
 echo Downloading U-Boot...
-$WORKDIR/curl --insecure -L -o $WORKDIR/$UBOOT $UBOOT_URL
+$WORKDIR/curl --insecure -f -L -o $WORKDIR/$UBOOT $UBOOT_URL
 if [ ! -s $WORKDIR/$UBOOT ]; then
     echo Download failed, please check available space and try again.
     exit -1
@@ -61,7 +61,7 @@ fi
 
 echo
 echo Downloading DTB...
-$WORKDIR/curl --insecure -L -o $WORKDIR/$DTB $DTB_URL
+$WORKDIR/curl --insecure -f -L -o $WORKDIR/$DTB $DTB_URL
 if [ ! -s $WORKDIR/$DTB ]; then
     echo Download failed, please check available space and try again.
     exit -1
@@ -69,7 +69,7 @@ fi
 
 echo
 echo Downloading SysUpgrade package...
-$WORKDIR/curl --insecure -L -o $PKG $SYSUP_URL
+$WORKDIR/curl --insecure -f -L -o $PKG $SYSUP_URL
 if ! tar -xvf $PKG -C $WORKDIR; then
     echo Unpacking failed, please check available space and try again.
     exit -1
@@ -81,7 +81,7 @@ rm -rf $WORKDIR/sysupgrade-*
 
 echo
 echo Downloading upgrade script...
-$WORKDIR/curl --insecure -L -o $WORKDIR/update.sh https://$UTILS_HOST$UPDATE_URL
+$WORKDIR/curl --insecure -f -L -o $WORKDIR/update.sh https://$UTILS_HOST$UPDATE_URL
 if [ ! -s $WORKDIR/update.sh ]; then
     echo Download failed, please check available space and try again.
     exit -1
